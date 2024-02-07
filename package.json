@@ -1,0 +1,16 @@
+{
+  "dependencies": {
+    "@google-cloud/bigquery": "^7.4.0",
+    "@google-cloud/functions-framework": "^3.3.0"
+  },
+  "name": "add_ga4_clustering",
+  "version": "0.0.1",
+  "description": "Updates the GA4 raw data tables in BigQuery and adds clustering.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "functions-framework --target=update_ga4_tables"
+  },
+  "author": "Moritz Bauer",
+  "license": "ISC"
+}
