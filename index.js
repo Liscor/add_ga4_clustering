@@ -67,7 +67,6 @@ functions.http('update_ga4_tables',async (req, res) => {
             }
         }
         res.status(200).send(`Table ${ga4_table_id} updated successfully.`);
-        
     }
     else {
         res.status(500).json({"success":"false","message":"Wrong / Missing request body"});
