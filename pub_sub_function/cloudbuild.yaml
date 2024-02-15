@@ -1,0 +1,14 @@
+steps:
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  args:
+  - gcloud
+  - functions
+  - deploy
+  - add_clusters_to_ga4_daily
+  - --region=europe-west3
+  - --source=.
+  - --trigger-topic=ga4_table_created
+  - --runtime=nodejs20
+  - --entry-point=update_ga4_tables
+  - --allow-unauthenticated
+  - --gen2
