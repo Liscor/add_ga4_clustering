@@ -11,4 +11,5 @@ steps:
   - --runtime=nodejs20
   - --entry-point=update_ga4_tables
   - --allow-unauthenticated
+  - --timeout=3600
   - --gen2
