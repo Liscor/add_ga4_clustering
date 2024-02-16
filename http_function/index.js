@@ -52,7 +52,7 @@ functions.http('update_ga4_tables',async (req, res) => {
 
             const query_update_cluster_rows = `
                 UPDATE \`${ga4_dataset_id}.${ga4_table_id}${table_suffix}\`
-                SET stream_id = stream_id
+                SET ${params.cluster_by} = ${params.cluster_by}
                 WHERE true
             `;
             

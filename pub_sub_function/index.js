@@ -45,7 +45,7 @@ functions.cloudEvent('update_ga4_tables',async cloudEvent => {
 
             const query_update_cluster_rows = `
                 UPDATE \`${ga4.dataset_id}.${ga4.table_id}\`
-                SET stream_id = stream_id
+                SET ${cluster_by} = ${cluster_by}
                 WHERE true
             `;
         
