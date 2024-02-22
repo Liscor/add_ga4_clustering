@@ -33,19 +33,28 @@ functions.cloudEvent('update_ga4_tables',async cloudEvent => {
             projectId: ga4.project_id
         });
 
+        let cluster_by_array = cluster_by.split(",");
+        let cluster_by_update = "";
+        
+        cluster_by_array.forEach(element => {
+            cluster_by_update += `${element} = ${element},`
+        });
+
+        cluster_by_update = cluster_by_update.replace(/,$/, '');
+
         const ga4_options = {
             clustering: {
-                fields: [cluster_by],
+                fields: [cluster_by_array],
             },
         };
-            
+
         try{
             await bigquery.dataset(ga4.dataset_id).table(ga4.table_id).setMetadata(ga4_options);
             console.log(`Table ${ga4.table_id} updated and clustered by: ${cluster_by}.`);
 
             const query_update_cluster_rows = `
                 UPDATE \`${ga4.dataset_id}.${ga4.table_id}\`
-                SET ${cluster_by} = ${cluster_by}
+                SET ${cluster_by_update}
                 WHERE true
             `;
         

@@ -26,21 +26,29 @@ functions.http('update_ga4_tables',async (req, res) => {
         const startDate = new Date(params.start_date); 
         const endDate = new Date(params.end_date); 
 
+        let cluster_by_array = params.cluster_by.split(",");
+        let cluster_by_update = "";
+        
+        cluster_by_array.forEach(element => {
+            cluster_by_update += `${element} = ${element},`
+        });
+
+        cluster_by_update = cluster_by_update.replace(/,$/, '');
+
         const ga4_dataset_id = params.dataset_id;
         const ga4_table_id = 'events_';
         const ga4_options = {
             clustering: {
-                fields: [params.cluster_by],
+                fields: [cluster_by_array],
             },
         };
 
-        
         function addDays(date, days) {
             const result = new Date(date);
             result.setDate(result.getDate() + days);
             return result;
         }
-        
+
         // Change clustering for all GA4 events_ tables for the date range specified in the request body
         for (let currentDate = new Date(startDate); currentDate <= endDate; currentDate = addDays(currentDate, 1)) {
             try{
@@ -52,7 +60,7 @@ functions.http('update_ga4_tables',async (req, res) => {
 
             const query_update_cluster_rows = `
                 UPDATE \`${ga4_dataset_id}.${ga4_table_id}${table_suffix}\`
-                SET ${params.cluster_by} = ${params.cluster_by}
+                SET ${cluster_by_update}
                 WHERE true
             `;
             
