@@ -52,22 +52,19 @@ functions.http('update_ga4_tables',async (req, res) => {
         // Change clustering for all GA4 events_ tables for the date range specified in the request body
         for (let currentDate = new Date(startDate); currentDate <= endDate; currentDate = addDays(currentDate, 1)) {
             try{
-            // Format the current date as YYYY-MM-DD
-            const table_suffix = currentDate.toISOString().split('T')[0].replaceAll("-","");
-            //console.log(table_suffix); // Do something with each date
-            await bigquery.dataset(ga4_dataset_id).table(ga4_table_id+table_suffix).setMetadata(ga4_options);
-            console.log(`Table ${ga4_table_id} updated and clustered by: ${params.cluster_by}.`);
+                const table_suffix = currentDate.toISOString().split('T')[0].replaceAll("-","");
+                await bigquery.dataset(ga4_dataset_id).table(ga4_table_id+table_suffix).setMetadata(ga4_options);
+                console.log(`Table ${ga4_table_id} updated and clustered by: ${params.cluster_by}.`);
 
-            const query_update_cluster_rows = `
-                UPDATE \`${ga4_dataset_id}.${ga4_table_id}${table_suffix}\`
-                SET ${cluster_by_update}
-                WHERE true
-            `;
+                const query_update_cluster_rows = `
+                    UPDATE \`${ga4_dataset_id}.${ga4_table_id}${table_suffix}\`
+                    SET ${cluster_by_update}
+                    WHERE true
+                `;
             
                 const [job] = await bigquery.createQueryJob({query:query_update_cluster_rows});
                 console.log(`Job ${job.id} started.`);
             
-                // Wait for the query to finish
                 await job.getQueryResults();
                 console.log(`Reprocess for ${ga4_table_id}${table_suffix} was successful`);
             }catch(error){
